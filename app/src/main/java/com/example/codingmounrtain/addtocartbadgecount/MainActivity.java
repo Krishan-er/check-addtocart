@@ -26,6 +26,7 @@ import com.example.codingmounrtain.addtocartbadgecount.interfaces.AddorRemoveCal
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AddorRemoveCallbacks {
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements AddorRemoveCallba
     static final String KEY_COST = "cost";
     int total_cost;
     RecyclerView mRecyclerView;
+    private ArrayList<Cart> mItems;
     RecyclerAdapter mAdapter;
     String[] productNames={"Clutch", "Settings", "Engine ", "Setup", "Ask ", "Battery"};
     String[] productdesc={" The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy ", " The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy", " The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy", " The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy", " The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy", " The engine block is the foundation of an engine. \nMost engine blocks are cast from an aluminum alloy"};
@@ -47,11 +49,6 @@ public class MainActivity extends AppCompatActivity implements AddorRemoveCallba
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Mekvahan");
-
-        Carteasy cs = new Carteasy();
-        cs.add(String id, String key, Object value);
-        cs.commit(getApplicationContext());
-        cs.add("Your Product Id", "key", "value");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +74,20 @@ public class MainActivity extends AppCompatActivity implements AddorRemoveCallba
         // specify an adapter (see also next example)
         mAdapter = new RecyclerAdapter(this,listdata);
         mRecyclerView.setAdapter(mAdapter);
+
+        Map<Integer, Map> data;
+        Carteasy cs = new Carteasy();
+        data = cs.ViewAll(getApplicationContext());
+        mItems = new ArrayList<Cart>();
+        Cart cartitem = new Cart();
+
+        if(data != null && data.size() > 0) {
+            for (Map.Entry<Integer, Map> entry : data.entrySet()) {
+                mItems.add(cartitem);
+            }
+        }
+
+
     }
 
     @Override

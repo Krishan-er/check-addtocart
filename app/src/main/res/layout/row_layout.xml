@@ -44,6 +44,15 @@
                 android:textStyle="italic"
                 android:text="Details of tge project"
                 />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:textColor="GREEN"
+                android:id="@+id/productprice"
+                android:textStyle="italic"
+                android:text="Details of tge project"
+                />
 
             <Button
                 android:background="@drawable/button_border"

@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carteasy.v1.lib.Carteasy;
+import com.example.codingmounrtain.addtocartbadgecount.Cart;
 import com.example.codingmounrtain.addtocartbadgecount.MainActivity;
 import com.example.codingmounrtain.addtocartbadgecount.ModelClasses.Products;
 import com.example.codingmounrtain.addtocartbadgecount.R;
@@ -26,63 +28,76 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
 
+    ArrayList<Cart> mItems;
     boolean isTextViewClicked = false;
     List<Products> productsList;
     Context mContext;
 
 
-    public RecyclerAdapter()
-    {
+    public RecyclerAdapter() {
 
     }
 
-    public RecyclerAdapter(Context mContext,List<Products> productsList)
-    {
-        this.mContext=mContext;
-        this.productsList=productsList;
+    public RecyclerAdapter(Context mContext, List<Products> productsList) {
+        this.mContext = mContext;
+        this.productsList = productsList;
 
     }
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder viewHolder, final int position) {
 
-        holder.productName.setText(productsList.get(position).getProductName());
+        Cart ct = mItems.get(position);
+
+       /* holder.productName.setText(productsList.get(position).getProductName());
         holder.productdesc.setText(productsList.get(position).getProductdesc());
         Picasso.with(mContext).load(productsList.get(position).getProductImageId()).centerCrop().resize(400,400).into(holder.productImage);
         holder.productImage.setImageResource(productsList.get(position).getProductImageId());
-        holder.addRemoveBt.setOnClickListener(new View.OnClickListener() {
+       */
+        viewHolder.mProductname.setText(ct.getName());
+        viewHolder.mProductdesc.setText(ct.getDescription());
+        viewHolder.mProductprice.setText("$" + Integer.toString(ct.getPrice()));
+        //viewHolder.mProductthumbnail.setImageResource(ct.getThumbnail());
+
+        String mOtherDetails = "Size: " + ct.getSize() + "  Qty: " + Integer.toString(ct.getQuantity()) + "  Color: " + ct.getColor();
+
+        mOtherDetails = mOtherDetails.substring(0, mOtherDetails.length() - 4) + "...";
+        viewHolder.mOtherdetails.setText(mOtherDetails);
+
+        Glide.with(mContext)
+                .load(ct.getThumbnail())
+                .into(viewHolder.mProductthumbnail);
+
+
+        /*holder.addRemoveBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(!productsList.get(position).isAddedTocart())
-                {
+                if (!productsList.get(position).isAddedTocart()) {
                     productsList.get(position).setAddedTocart(true);
                     holder.addRemoveBt.setText("Remove");
-                    if(mContext instanceof MainActivity)
-                    {
-                        ((AddorRemoveCallbacks)mContext).onAddProduct( holder.productName.getText().toString());
+                    if (mContext instanceof MainActivity) {
+                        ((AddorRemoveCallbacks) mContext).onAddProduct(holder.productName.getText().toString());
                     }
 
-                }
-                else
-                {
+                } else {
                     productsList.get(position).setAddedTocart(false);
                     holder.addRemoveBt.setText("Add");
-                    ((AddorRemoveCallbacks)mContext).onRemoveProduct();
+                    ((AddorRemoveCallbacks) mContext).onRemoveProduct();
                 }
             }
         });
 
-        holder.productdesc.setOnClickListener(new View.OnClickListener() {
+        *//*holder.productdesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isTextViewClicked){
+                if (isTextViewClicked) {
                     //This will shrink textview to 2 lines if it is expanded.
                     holder.productdesc.setMaxLines(Integer.MAX_VALUE);
                     isTextViewClicked = false;
@@ -93,7 +108,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 }
             }
         });
-
+*/
     }
 
     @Override
@@ -101,8 +116,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return productsList.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
+        public final ImageView mProductthumbnail, optionButton;
+        public final TextView mProductname, mProductdesc, mProductprice, mOtherdetails;
+        public final View mView;
         ImageView productImage;
         TextView productName;
         TextView productdesc;
@@ -110,10 +128,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            productdesc=itemView.findViewById(R.id.productdesc);
-            productImage=(ImageView) itemView.findViewById(R.id.productImageView);
-            productName=(TextView) itemView.findViewById(R.id.productNameTv);
-            addRemoveBt=(Button)itemView.findViewById(R.id.addButton);
+            mView = itemView;
+            mProductname = (TextView) itemView.findViewById(R.id.productNameTv);
+            mProductdesc = (TextView) itemView.findViewById(R.id.productdesc);
+            mProductprice = (TextView) itemView.findViewById(R.id.productprice);
+            mProductthumbnail =  (ImageView) itemView.findViewById(R.id.productImageView);
+            mOtherdetails = (TextView) itemView.findViewById(R.id.otherdetails);
+            optionButton = (ImageView) itemView.findViewById(R.id.more_menu_button);
+            addRemoveBt = (Button) itemView.findViewById(R.id.addButton);
         }
     }
 }
